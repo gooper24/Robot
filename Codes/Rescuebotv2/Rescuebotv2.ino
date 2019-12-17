@@ -1,4 +1,4 @@
-
+// test
 // Code voor het aansturen van een ESP8266-E12 via Wifi (schoolrouter Tesla IoT)
 // Basis is te vinden op https://www.instructables.com/id/Esp8266-Esp12e-Webserver/#discuss
 #define ENA   14          // Enable/speed motors Right        GPIO14(D5)
@@ -8,6 +8,13 @@
 #define IN_3  2           // L298N in3 motors Left            GPIO2(D4)
 #define IN_4  0           // L298N in4 motors Left            GPIO0(D3)
 
+
+// IR SENSOREN 
+//#define IR_L 
+//#define IR_R 
+
+
+// ESP LIBRARIES
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
