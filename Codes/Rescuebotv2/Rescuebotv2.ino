@@ -184,8 +184,8 @@ void stopRobot(){
 void loop() {
     server.handleClient();
     
-      command = server.arg("State");
-      if (command == "F") goAhead();
+      command = server.arg("State");  
+      /* if (command == "F") goAhead();
       else if (command == "B") goBack();
       else if (command == "L") goLeft();
       else if (command == "R") goRight();
@@ -203,7 +203,7 @@ void loop() {
       else if (command == "7") speedCar = 890;
       else if (command == "8") speedCar = 960;
       else if (command == "9") speedCar = 1023;
-      else if (command == "S") stopRobot();
+      else if (command == "S") stopRobot(); */
 }
 
 void HTTP_handleRoot(void) {
