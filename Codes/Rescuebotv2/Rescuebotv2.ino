@@ -34,7 +34,7 @@ int speedCar = 800;         // 400 - 1023.
 int speed_Coeff = 3;
 
 void setup() {
-  Wire.begin()
+  Wire.begin();
   Serial.begin(74880);
   delay(100);
  pinMode(ENA, OUTPUT);
@@ -147,14 +147,14 @@ void goAheadLeft(){
 
       digitalWrite(IN_3, HIGH);
       digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar/speed_Coeff);
+      analogWrite(ENB, 400); //speedCar/speed_Coeff
   }
 
 void goBackRight(){ 
 
       digitalWrite(IN_1, LOW);
       digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar/speed_Coeff);
+      analogWrite(ENA, 600); //speedCar/speed_Coeff
 
       digitalWrite(IN_3, HIGH);
       digitalWrite(IN_4, LOW);
@@ -193,26 +193,10 @@ void loop() {
       if(sensorState == '1') 
       {
         edgeFound();
+      } else if(sensorState == '0') 
+      {
+        edgeNotFound();
       }
-      /* if (command == "F") goAhead();
-      else if (command == "B") goBack();
-      else if (command == "L") goLeft();
-      else if (command == "R") goRight();
-      else if (command == "I") goAheadRight();
-      else if (command == "G") goAheadLeft();
-      else if (command == "J") goBackRight();
-      else if (command == "H") goBackLeft();
-      else if (command == "0") speedCar = 400;
-      else if (command == "1") speedCar = 470;
-      else if (command == "2") speedCar = 540;
-      else if (command == "3") speedCar = 610;
-      else if (command == "4") speedCar = 680;
-      else if (command == "5") speedCar = 750;
-      else if (command == "6") speedCar = 820;
-      else if (command == "7") speedCar = 890;
-      else if (command == "8") speedCar = 960;
-      else if (command == "9") speedCar = 1023;
-      else if (command == "S") stopRobot(); */
 }
 
 char requestSensor() {
@@ -227,7 +211,13 @@ char requestSensor() {
 
 void edgeFound()
 {
-  //Hier code voor als er een afgrond word gevonden
+  //als er een afgrond is gevonden
+  stopRobot();
+}
+void edgeNotFound()
+{
+  //als er geen afgrond is gevonden
+  goAhead();
 }
 
 void HTTP_handleRoot(void) {
