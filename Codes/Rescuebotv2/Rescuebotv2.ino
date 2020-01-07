@@ -10,8 +10,8 @@
 
 
 // IR SENSOREN 
-#define IR_L 4     //GPIO4 (D2)
-#define IR_R 5    //GPIO5 (D1)
+//#define IR_L 
+//#define IR_R 
 
 
 // ESP LIBRARIES
@@ -271,24 +271,4 @@ void commandCheck(){
     server.send(200, "text/html", webPage);
     goBackRight();
   });
-}
-
-
-// CODE To be tested IR SENSOR
-void IR_left(){
-  while(digitalRead(IR_L) != 1)
-  {
-    goAheadRight();
-    Serial.println("[IR LEFT] TRUE GOING RIGHT");
-    
-  }
-}
-
-void IR_Right(){
-  while(digitalRead(IR_R) != 1)
-  {
-    goAheadLeft();
-    Serial.println("[IR RIGHT] TRUE GOING LEFT");
-    
-  }
 }
