@@ -33,6 +33,8 @@ String command;             //String to store app command state.
 int speedCar = 800;         // 400 - 1023.
 int speed_Coeff = 3;
 
+bool manual = false;
+
 void setup() {
   Wire.begin();
   Serial.begin(74880);
@@ -82,6 +84,14 @@ void setup() {
     webPage += "<a href=\"Rechtsvoor\"><button>rechtsvoor</button></a>&nbsp;";
     webPage += "<a href=\"Linksachter\"><button>Linksachter</button></a>&nbsp;";
     webPage += "<a href=\"Rechtsachter\"><button>Rechtsachter</button></a>&nbsp;";
+    if(manual)
+    {
+      webPage += "<a href=\"ToggleManual\"><button>Manual</button></a>&nbsp;";
+    }
+    if(!manual)
+    {
+      webPage += "<a href=\"ToggleManual\"><button>Automatic</button></a>&nbsp;";
+    }
 }
  void goAhead(){ 
 
@@ -187,6 +197,9 @@ void stopRobot(){
 void loop() {
     server.handleClient();
     char sensorState;
+
+    if(!manual)
+    {
     
       command = server.arg("State");  
       sensorState = requestSensor();
@@ -197,6 +210,8 @@ void loop() {
       {
         edgeNotFound();
       }
+
+    }
 }
 
 char requestSensor() {
@@ -270,5 +285,10 @@ void commandCheck(){
       server.on("/Rechtsachter", [](){
     server.send(200, "text/html", webPage);
     goBackRight();
+  });
+
+        server.on("/ToggleManual", [](){
+    server.send(200, "text/html", webPage);
+    manual = !manual;
   });
 }
