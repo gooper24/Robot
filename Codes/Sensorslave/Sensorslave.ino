@@ -28,7 +28,7 @@ long microsecondsToCentimeters(long microseconds) {
 
 void requestEvent()
 {
-  bool edge = cm >= 5;
+  bool edge = cm >= 10;
   if(edge)
   {
     Wire.write('1');
