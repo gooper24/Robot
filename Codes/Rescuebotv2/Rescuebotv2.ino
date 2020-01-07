@@ -20,6 +20,8 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
+#include <Wire.h> //Voor I2C
+
 MDNSResponder mdns;
  
 ESP8266WebServer server(80);
@@ -32,6 +34,7 @@ int speedCar = 800;         // 400 - 1023.
 int speed_Coeff = 3;
 
 void setup() {
+  Wire.begin()
   Serial.begin(74880);
   delay(100);
  pinMode(ENA, OUTPUT);
@@ -183,8 +186,14 @@ void stopRobot(){
 
 void loop() {
     server.handleClient();
+    char sensorState;
     
       command = server.arg("State");  
+      sensorState = requestSensor();
+      if(sensorState == '1') 
+      {
+        edgeFound();
+      }
       /* if (command == "F") goAhead();
       else if (command == "B") goBack();
       else if (command == "L") goLeft();
@@ -204,6 +213,21 @@ void loop() {
       else if (command == "8") speedCar = 960;
       else if (command == "9") speedCar = 1023;
       else if (command == "S") stopRobot(); */
+}
+
+char requestSensor() {
+  char response;
+  Wire.requestFrom(8, 1);
+  while (Wire.available())
+  {
+    response = Wire.read();
+  }
+  return response;
+}
+
+void edgeFound()
+{
+  //Hier code voor als er een afgrond word gevonden
 }
 
 void HTTP_handleRoot(void) {
