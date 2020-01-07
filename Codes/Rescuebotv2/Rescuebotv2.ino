@@ -197,11 +197,10 @@ void stopRobot(){
 void loop() {
     server.handleClient();
     char sensorState;
-
-    if(!manual)
-    {
     
-      command = server.arg("State");  
+      command = server.arg("State");
+    if(!manual)
+    {  
       sensorState = requestSensor();
       if(sensorState == '1') 
       {
