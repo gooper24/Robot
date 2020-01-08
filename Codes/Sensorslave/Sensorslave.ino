@@ -19,17 +19,12 @@ void setup() {
 }
 
 void loop() {
-<<<<<<< HEAD
   detectEdge();
-=======
-  //detectEdge();
->>>>>>> master
   detectLines();
 }
 
 void detectEdge()
 {
-<<<<<<< HEAD
   long duration;
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
@@ -38,22 +33,6 @@ void detectEdge()
   digitalWrite(pingPin, LOW);
   duration = pulseIn(echoPin, HIGH);
   cm = microsecondsToCentimeters(duration);
-}
-
-void detectLines()
-{
-  leftLine = !digitalRead(IRLeft);
-  rightLine = !digitalRead(IRRight);
-=======
-   long duration;
-   digitalWrite(pingPin, LOW);
-   delayMicroseconds(2);
-   digitalWrite(pingPin, HIGH);
-   delayMicroseconds(10);
-   digitalWrite(pingPin, LOW);
-   duration = pulseIn(echoPin, HIGH);
-   cm = microsecondsToCentimeters(duration);
->>>>>>> master
 }
 
 void detectLines()
@@ -74,20 +53,12 @@ void requestEvent()
     Wire.write('1');
     Serial.println("Rand");
   }
-<<<<<<< HEAD
   if (leftLine)
-=======
-  if(leftLine)
->>>>>>> master
   {
     Wire.write('L');
     Serial.println("Links");
   }
-<<<<<<< HEAD
   if (rightLine)
-=======
-  if(rightLine)
->>>>>>> master
   {
     Wire.write('R');
     Serial.println("Rechts");
