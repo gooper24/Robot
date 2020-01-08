@@ -2,16 +2,29 @@
 
 const int pingPin = 7;
 const int echoPin = 6;
+const int IRLeft = 2;
+const int IRRight = 3;
 long cm;
+bool leftLine;
+bool rightLine;
 
 void setup() {
+  Serial.begin(74880);
   pinMode(pingPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(IRLeft, INPUT_PULLUP);
+  pinMode(IRRight, INPUT_PULLUP);
   Wire.begin(8);
   Wire.onRequest(requestEvent);
 }
 
 void loop() {
+  //detectEdge();
+  detectLines();
+}
+
+void detectEdge()
+{
    long duration;
    digitalWrite(pingPin, LOW);
    delayMicroseconds(2);
@@ -20,6 +33,12 @@ void loop() {
    digitalWrite(pingPin, LOW);
    duration = pulseIn(echoPin, HIGH);
    cm = microsecondsToCentimeters(duration);
+}
+
+void detectLines()
+{
+  leftLine = !digitalRead(IRLeft);
+  rightLine = !digitalRead(IRRight);
 }
 
 long microsecondsToCentimeters(long microseconds) {
@@ -32,6 +51,17 @@ void requestEvent()
   if(edge)
   {
     Wire.write('1');
+    Serial.println("Rand");
+  }
+  if(leftLine)
+  {
+    Wire.write('L');
+    Serial.println("Links");
+  }
+  if(rightLine)
+  {
+    Wire.write('R');
+    Serial.println("Rechts");
   }
   else(Wire.write('0'));
 }

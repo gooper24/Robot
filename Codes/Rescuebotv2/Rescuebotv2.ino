@@ -202,14 +202,20 @@ void loop() {
     if(!manual)
     {  
       sensorState = requestSensor();
-      if(sensorState == '1') 
-      {
+      switch (sensorState){
+        case '1':
         edgeFound();
-      } else if(sensorState == '0') 
-      {
-        edgeNotFound();
+        break;
+        case 'L':
+        leftLineFound();
+        break;
+        case 'R':
+        rightLineFound();
+        break;
+        default:
+        nothingFound();
+        break;
       }
-
     }
 }
 
@@ -223,12 +229,25 @@ char requestSensor() {
   return response;
 }
 
+void leftLineFound()
+{
+  //Wat te doen als er links een lijn wordt gedetecteerd
+  Serial.println("Linkerlijn");
+}
+
+void rightLineFound()
+{
+  //Wat te doen als er rechts een lijn wordt gedetecteerd
+  Serial.println("Rechterlijn");
+}
+
 void edgeFound()
 {
   //als er een afgrond is gevonden
   stopRobot();
 }
-void edgeNotFound()
+
+void nothingFound()
 {
   //als er geen afgrond is gevonden
   goAhead();
