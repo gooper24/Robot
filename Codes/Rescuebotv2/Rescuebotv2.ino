@@ -9,9 +9,9 @@
 #define IN_4  0           // L298N in4 motors Left            GPIO0(D3)
 
 
-// IR SENSOREN 
-//#define IR_L 
-//#define IR_R 
+// IR SENSOREN
+//#define IR_L
+//#define IR_R
 
 
 // ESP LIBRARIES
@@ -23,9 +23,11 @@
 #include <Wire.h> //Voor I2C
 
 MDNSResponder mdns;
- 
+
 ESP8266WebServer server(80);
 String webPage;
+//const char* ssid     = "";      //wifi name
+//const char* password = "E6CA72ADC93A";  //wifi password
 const char* ssid     = "Tesla IoT";      //wifi name
 const char* password = "fsL6HgjN";  //wifi password
 
@@ -39,184 +41,186 @@ void setup() {
   Wire.begin();
   Serial.begin(74880);
   delay(100);
- pinMode(ENA, OUTPUT);
- pinMode(ENB, OUTPUT);  
- pinMode(IN_1, OUTPUT);
- pinMode(IN_2, OUTPUT);
- pinMode(IN_3, OUTPUT);
- pinMode(IN_4, OUTPUT);
- 
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN_1, OUTPUT);
+  pinMode(IN_2, OUTPUT);
+  pinMode(IN_3, OUTPUT);
+  pinMode(IN_4, OUTPUT);
+
   Serial.println();
   Serial.println();
   Serial.print("Verbinding maken met ");
   Serial.println(ssid);
-  
+
   WiFi.begin(ssid, password);
-  
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
- 
+
   Serial.println("");
-  Serial.println("WiFi aangesloten");  
+  Serial.println("WiFi aangesloten");
   Serial.println("IP addres: ");
   Serial.println(WiFi.localIP());
-  
-  if (mdns.begin("esp8266", WiFi.localIP())) 
+
+  if (mdns.begin("esp8266", WiFi.localIP()))
     Serial.println("MDNS responder gestart");
- 
-  server.on("/", [](){
+
+  server.on("/", []() {
     server.send(200, "text/html", webPage);
   });
-  
-  commandCheck(); //Controleert invoer gebruiker en voert commands uit
+
+
 
   server.begin();
   Serial.println("HTTP server gestart");
 
-    webPage += "<a href=\"Vooruit\"><button>Vooruit</button></a>&nbsp;";
-    webPage += "<a href=\"Stoppen\"><button>Stoppen</button></a>&nbsp;";
-    webPage += "<a href=\"Links\"><button>Links</button></a>&nbsp;";
-    webPage += "<a href=\"Rechts\"><button>Rechts</button></a>&nbsp;";
-    webPage += "<a href=\"Achteruit\"><button>Achteruit</button></a>&nbsp;";
-    webPage += "<a href=\"Linksvoor\"><button>Linksvoor</button></a>&nbsp;";
-    webPage += "<a href=\"Rechtsvoor\"><button>rechtsvoor</button></a>&nbsp;";
-    webPage += "<a href=\"Linksachter\"><button>Linksachter</button></a>&nbsp;";
-    webPage += "<a href=\"Rechtsachter\"><button>Rechtsachter</button></a>&nbsp;";
-    if(manual)
-    {
-      webPage += "<a href=\"ToggleManual\"><button>Manual</button></a>&nbsp;";
-    }
-    if(!manual)
-    {
-      webPage += "<a href=\"ToggleManual\"><button>Automatic</button></a>&nbsp;";
-    }
+  webPage += "<a href=\"Vooruit\"><button>Vooruit</button></a>&nbsp;";
+  webPage += "<a href=\"Stoppen\"><button>Stoppen</button></a>&nbsp;";
+  webPage += "<a href=\"Links\"><button>Links</button></a>&nbsp;";
+  webPage += "<a href=\"Rechts\"><button>Rechts</button></a>&nbsp;";
+  webPage += "<a href=\"Achteruit\"><button>Achteruit</button></a>&nbsp;";
+  webPage += "<a href=\"Linksvoor\"><button>Linksvoor</button></a>&nbsp;";
+  webPage += "<a href=\"Rechtsvoor\"><button>rechtsvoor</button></a>&nbsp;";
+  webPage += "<a href=\"Linksachter\"><button>Linksachter</button></a>&nbsp;";
+  webPage += "<a href=\"Rechtsachter\"><button>Rechtsachter</button></a>&nbsp;";
+
+  commandCheck(); //Controleert invoer gebruiker en voert commands uit
+  if (manual)
+  {
+    webPage += "<a href=\"ToggleManual\"><button>Manual</button></a>&nbsp;";
+  }
+  if (!manual)
+  {
+    webPage += "<a href=\"ToggleManual\"><button>Automatic</button></a>&nbsp;";
+  }
 }
- void goAhead(){ 
+void goAhead() {
 
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar);
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, HIGH);
+  analogWrite(ENA, speedCar);
 
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar);
-      Serial.println("ROBOT START MET RIJDEN");
-  }
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, HIGH);
+  analogWrite(ENB, speedCar);
+}
 
-void goBack(){ 
+void goBack() {
 
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
+  digitalWrite(IN_1, HIGH);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speedCar);
 
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-  }
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speedCar);
+}
 
-void goRight(){ 
+void goRight() {
 
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
+  digitalWrite(IN_1, HIGH);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speedCar);
 
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar);
-  }
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, HIGH);
+  analogWrite(ENB, speedCar);
+}
 
-void goLeft(){
+void goLeft() {
 
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar);
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, HIGH);
+  analogWrite(ENA, speedCar);
 
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-  }
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speedCar);
+}
 
-void goAheadRight(){
-      
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar/speed_Coeff);
- 
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar);
-   }
+void goAheadRight() {
 
-void goAheadLeft(){
-      
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar);
+  digitalWrite(IN_1, HIGH);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speedCar / speed_Coeff);
 
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, 400); //speedCar/speed_Coeff
-  }
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, HIGH);
+  analogWrite(ENB, speedCar);
+}
 
-void goBackRight(){ 
+void goAheadLeft() {
 
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, 600); //speedCar/speed_Coeff
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, HIGH);
+  analogWrite(ENA, speedCar);
 
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-  }
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, 400); //speedCar/speed_Coeff
 
-void goBackLeft(){ 
+}
 
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
+void goBackRight() {
 
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar/speed_Coeff);
-  }
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, HIGH);
+  analogWrite(ENA, 600); //speedCar/speed_Coeff
 
-void stopRobot(){  
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speedCar);
+}
 
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
+void goBackLeft() {
 
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-      Serial.println("STOP ROBOT!!!");
- }
+  digitalWrite(IN_1, HIGH);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speedCar);
+
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, HIGH);
+  analogWrite(ENB, speedCar / speed_Coeff);
+
+}
+
+void stopRobot() {
+
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speedCar);
+
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speedCar);
+}
 
 void loop() {
-    server.handleClient();
-    char sensorState;
-    
-      command = server.arg("State");
-    if(!manual)
-    {  
-      sensorState = requestSensor();
-      switch (sensorState){
-        case '1':
+  server.handleClient();
+  char sensorState;
+
+  command = server.arg("State");
+  if (!manual)
+  {
+    sensorState = requestSensor();
+    switch (sensorState) {
+      case '1':
         edgeFound();
         break;
-        case 'L':
+      case 'L':
         leftLineFound();
         break;
-        case 'R':
+      case 'R':
         rightLineFound();
         break;
-        default:
+      default:
         nothingFound();
         break;
-      }
     }
+  }
 }
 
 char requestSensor() {
@@ -233,18 +237,30 @@ void leftLineFound()
 {
   //Wat te doen als er links een lijn wordt gedetecteerd
   Serial.println("Linkerlijn");
+  goRight();
+  delay(100);
+  goAhead();
+  delay(100);
 }
 
 void rightLineFound()
 {
   //Wat te doen als er rechts een lijn wordt gedetecteerd
   Serial.println("Rechterlijn");
+  goLeft();
+  delay(100);
+  goAhead();
 }
 
 void edgeFound()
 {
   //als er een afgrond is gevonden
   stopRobot();
+  goBack();
+  delay(500);
+  goRight();
+  delay(2000);
+  goAhead();
 }
 
 void nothingFound()
@@ -255,57 +271,73 @@ void nothingFound()
 
 void HTTP_handleRoot(void) {
 
-if( server.hasArg("State") ){
-       Serial.println(server.arg("State"));
+  if ( server.hasArg("State") ) {
+    Serial.println(server.arg("State"));
   }
   server.send ( 200, "text/html", "" );
   delay(1);
 }
 
-void commandCheck(){
-    server.on("/Stoppen", [](){
+void commandCheck() {
+  server.on("/Stoppen", []() {
     server.send(200, "text/html", webPage);
     stopRobot();
   });
-  
-    server.on("/Vooruit", [](){
+
+  server.on("/Vooruit", []() {
     server.send(200, "text/html", webPage);
     goAhead();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
-      server.on("/Links", [](){
+  server.on("/Links", []() {
     server.send(200, "text/html", webPage);
     goLeft();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
-      server.on("/Rechts", [](){
+  server.on("/Rechts", []() {
     server.send(200, "text/html", webPage);
     goRight();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
-      server.on("/Achteruit", [](){
+  server.on("/Achteruit", []() {
     server.send(200, "text/html", webPage);
     goBack();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
 
-    server.on("/Linksvoor", [](){
+  server.on("/Linksvoor", []() {
     server.send(200, "text/html", webPage);
     goAheadLeft();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
-  
-      server.on("/Rechtsvoor", [](){
+
+  server.on("/Rechtsvoor", []() {
     server.send(200, "text/html", webPage);
     goAheadRight();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
 
-      server.on("/Linksachter", [](){
+  server.on("/Linksachter", []() {
     server.send(200, "text/html", webPage);
     goBackLeft();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
 
-      server.on("/Rechtsachter", [](){
+  server.on("/Rechtsachter", []() {
     server.send(200, "text/html", webPage);
     goBackRight();
+    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    stopRobot();
   });
 
-        server.on("/ToggleManual", [](){
+  server.on("/ToggleManual", []() {
     server.send(200, "text/html", webPage);
     manual = !manual;
   });

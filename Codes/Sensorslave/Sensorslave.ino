@@ -21,6 +21,7 @@ void setup() {
 void loop() {
   detectEdge();
   detectLines();
+      Serial.println(cm);
 }
 
 void detectEdge()
@@ -47,11 +48,12 @@ long microsecondsToCentimeters(long microseconds) {
 
 void requestEvent()
 {
-  bool edge = cm >= 10;
+  bool edge = cm >= 15;
   if (edge)
   {
     Wire.write('1');
     Serial.println("Rand");
+    
   }
   if (leftLine)
   {
