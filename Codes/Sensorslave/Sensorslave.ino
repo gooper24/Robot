@@ -72,8 +72,8 @@ void requestEvent()
 char state()
 {
   bool edge = cm >= 15;
-  if (edge) return '1'; //één
+  if (edge) return '1';
   if leftLine && rightLine return 'O';
-  if leftLine return 'l'; //L
-  if rightLine return 'r';
+  if leftLine return 'L';
+  if rightLine return 'R';
 }
