@@ -2,8 +2,8 @@
 
 const int pingPin = 7;
 const int echoPin = 6;
-const int IRLeft = 2;
-const int IRRight = 3;
+const int IRLeft = 3;
+const int IRRight = 2;
 long cm;
 bool leftLine;
 bool rightLine;
@@ -21,7 +21,7 @@ void setup() {
 void loop() {
   detectEdge();
   detectLines();
-      Serial.println(cm);
+  Serial.println(state());
 }
 
 void detectEdge()
@@ -49,15 +49,14 @@ long microsecondsToCentimeters(long microseconds) {
 void requestEvent()
 {
   Wire.write(state());
-  bool edge = cm >= 15;
+  Serial.println(state());
 }
 
 char state()
 {
-  bool edge = cm >= 15;
-  if (edge) return '1';
+  if (cm >= 15) return '1';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';
-  return 0;
+  return '0';
 }

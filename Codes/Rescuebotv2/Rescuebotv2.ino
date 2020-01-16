@@ -233,6 +233,7 @@ char requestSensor() {
 void hardLineFound()
 {
   //Wat te doen als links en rechts een lijn detecteren;
+  stopRobot();
 }
 
 void leftLineFound()
