@@ -9,11 +9,6 @@
 #define IN_4  0           // L298N in4 motors Left            GPIO0(D3)
 
 
-// IR SENSOREN
-//#define IR_L
-//#define IR_R
-
-
 // ESP LIBRARIES
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -147,20 +142,20 @@ void goAheadRight() {
   digitalWrite(IN_2, LOW);
   analogWrite(ENA, speedCar / speed_Coeff);
 
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speedCar);
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speedCar); //speedCar/speed_Coeff
 }
 
 void goAheadLeft() {
 
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speedCar);
+  analogWrite(ENA, speedCar); //speedCar/speed_Coeff
 
   digitalWrite(IN_3, HIGH);
   digitalWrite(IN_4, LOW);
-  analogWrite(ENB, 400); //speedCar/speed_Coeff
+  analogWrite(ENB, speedCar / speed_Coeff); //speedCar/speed_Coeff
 
 }
 
@@ -168,7 +163,7 @@ void goBackRight() {
 
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, 600); //speedCar/speed_Coeff
+  analogWrite(ENA, speedCar / speed_Coeff); //speedCar/speed_Coeff
 
   digitalWrite(IN_3, HIGH);
   digitalWrite(IN_4, LOW);
@@ -260,6 +255,7 @@ void edgeFound()
 {
   //als er een afgrond is gevonden
   stopRobot();
+  delay(100)
   goBack();
   delay(500);
   goRight();
