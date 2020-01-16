@@ -1,4 +1,4 @@
-int servo = 7;
+int servo = 6;
 
 int angle;
 int pwm;
@@ -10,9 +10,9 @@ void setup()
 
 void loop ()
 {
- for (angle = 0; angle <= 140; angle += 1)  {
+ for (angle = 0; angle <= 180; angle += 1)  {
    servoPulse(servo, angle);  }
- for (angle = 140; angle >= 0; angle -= 1)  {
+ for (angle = 180; angle >= 0; angle -= 1)  {
    servoPulse(servo, angle);  }
 }
  
@@ -22,5 +22,5 @@ void servoPulse (int servo, int angle)
  digitalWrite(servo, HIGH);
  delayMicroseconds(pwm);
  digitalWrite(servo, LOW);  
- delay(50);// Refresh cycle of servo
+ delay(1000);// Refresh cycle of servo
 }

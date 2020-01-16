@@ -48,6 +48,7 @@ long microsecondsToCentimeters(long microseconds) {
 
 void requestEvent()
 {
+  Wire.write(state());
   bool edge = cm >= 15;
   if (edge)
   {
@@ -66,4 +67,13 @@ void requestEvent()
     Serial.println("Rechts");
   }
   else(Wire.write('0'));
+}
+
+char state()
+{
+  bool edge = cm >= 15;
+  if (edge) return '1'; //één
+  if leftLine && rightLine return 'O';
+  if leftLine return 'l'; //L
+  if rightLine return 'r';
 }
