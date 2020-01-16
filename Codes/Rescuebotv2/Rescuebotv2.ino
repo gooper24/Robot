@@ -32,7 +32,7 @@ const char* ssid     = "Tesla IoT";      //wifi name
 const char* password = "fsL6HgjN";  //wifi password
 
 String command;             //String to store app command state.
-int speedCar = 800;         // 400 - 1023.
+int speedCar = 600;         // 400 - 1023.
 int speed_Coeff = 3;
 
 bool manual = false;
@@ -239,8 +239,6 @@ void leftLineFound()
   Serial.println("Linkerlijn");
   goRight();
   delay(100);
-  goAhead();
-  delay(100);
 }
 
 void rightLineFound()
@@ -249,7 +247,6 @@ void rightLineFound()
   Serial.println("Rechterlijn");
   goLeft();
   delay(100);
-  goAhead();
 }
 
 void edgeFound()
@@ -260,7 +257,6 @@ void edgeFound()
   delay(500);
   goRight();
   delay(2000);
-  goAhead();
 }
 
 void nothingFound()
