@@ -50,30 +50,14 @@ void requestEvent()
 {
   Wire.write(state());
   bool edge = cm >= 15;
-  if (edge)
-  {
-    Wire.write('1');
-    Serial.println("Rand");
-    
-  }
-  if (leftLine)
-  {
-    Wire.write('L');
-    Serial.println("Links");
-  }
-  if (rightLine)
-  {
-    Wire.write('R');
-    Serial.println("Rechts");
-  }
-  else(Wire.write('0'));
 }
 
 char state()
 {
   bool edge = cm >= 15;
   if (edge) return '1';
-  if leftLine && rightLine return 'O';
-  if leftLine return 'L';
-  if rightLine return 'R';
+  if (leftLine && rightLine) return 'O';
+  if (leftLine) return 'L';
+  if (rightLine) return 'R';
+  return 0;
 }
