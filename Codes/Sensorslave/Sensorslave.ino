@@ -38,8 +38,8 @@ void detectEdge()
 
 void detectLines()
 {
-  leftLine = !digitalRead(IRLeft);
-  rightLine = !digitalRead(IRRight);
+  leftLine = digitalRead(IRLeft);
+  rightLine = digitalRead(IRRight);
 }
 
 long microsecondsToCentimeters(long microseconds) {
