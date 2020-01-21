@@ -1,5 +1,8 @@
 #include <Wire.h> //Voor I2C
 
+const int pingPin2 = 8;
+const int echoPin2 = 9;
+
 const int pingPin = 7;
 const int echoPin = 6;
 const int IRLeft = 3;
@@ -8,6 +11,7 @@ const int hallPin = 4; //hall sensor
 int led = 13; // standaard LED op Arduino
 int hallSensorValue;
 long cm;
+long cm2;
 bool leftLine;
 bool rightLine;
 
@@ -42,6 +46,18 @@ void detectEdge()
   cm = microsecondsToCentimeters(duration);
 }
 
+void detectObject()
+{
+  long duration;
+  digitalWrite(pingPin2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pingPin2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pingPin2, LOW);
+  duration = pulseIn(echoPin2, HIGH);
+  cm2 = microsecondsToCentimeters(duration);
+}
+
 void detectLines()
 {
   leftLine = digitalRead(IRLeft);
@@ -61,6 +77,7 @@ void requestEvent()
 char state()
 {
   if (cm >= 15) return '1';
+  if (cm <= 3) return '2';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';

@@ -205,6 +205,8 @@ void loop() {
       case '1':
         edgeFound();
         break;
+      case '2':
+        objectFound();
       case 'L':
         leftLineFound();
         break;
@@ -239,6 +241,12 @@ void hardLineFound()
 {
   //Wat te doen als links en rechts een lijn detecteren;
   stopRobot();
+}
+
+void objectFound()
+{
+  //Wat te doen als links en rechts een lijn detecteren;
+  Serial.println("Foundobject");
 }
 
 void leftLineFound()
