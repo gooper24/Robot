@@ -20,7 +20,6 @@
 MDNSResponder mdns;
 
 ESP8266WebServer server(80);
-String webPage;
 //const char* ssid     = "";      //wifi name
 //const char* password = "E6CA72ADC93A";  //wifi password
 const char* ssid     = "Tesla IoT";      //wifi name
@@ -30,7 +29,7 @@ String command;             //String to store app command state.
 int speedCar = 400;         // 400 - 1023.
 int speed_Coeff = 3;
 
-bool manual = false;
+bool manual = true;
 
 void setup() {
   Wire.begin();
@@ -64,7 +63,11 @@ void setup() {
     Serial.println("MDNS responder gestart");
 
   server.on("/", []() {
-    server.send(200, "text/html", webPage);
+    if (server.arg("speedInput") != "") 
+    {
+      speedCar=server.arg("speedInput").toInt();
+    }
+    server.send(200, "text/html", webPage());
   });
 
 
@@ -72,25 +75,9 @@ void setup() {
   server.begin();
   Serial.println("HTTP server gestart");
 
-  webPage += "<a href=\"Vooruit\"><button>Vooruit</button></a>&nbsp;";
-  webPage += "<a href=\"Stoppen\"><button>Stoppen</button></a>&nbsp;";
-  webPage += "<a href=\"Links\"><button>Links</button></a>&nbsp;";
-  webPage += "<a href=\"Rechts\"><button>Rechts</button></a>&nbsp;";
-  webPage += "<a href=\"Achteruit\"><button>Achteruit</button></a>&nbsp;";
-  webPage += "<a href=\"Linksvoor\"><button>Linksvoor</button></a>&nbsp;";
-  webPage += "<a href=\"Rechtsvoor\"><button>rechtsvoor</button></a>&nbsp;";
-  webPage += "<a href=\"Linksachter\"><button>Linksachter</button></a>&nbsp;";
-  webPage += "<a href=\"Rechtsachter\"><button>Rechtsachter</button></a>&nbsp;";
+
 
   commandCheck(); //Controleert invoer gebruiker en voert commands uit
-  if (manual)
-  {
-    webPage += "<a href=\"ToggleManual\"><button>Manual</button></a>&nbsp;";
-  }
-  if (!manual)
-  {
-    webPage += "<a href=\"ToggleManual\"><button>Automatic</button></a>&nbsp;";
-  }
 }
 void goAhead() {
 
@@ -269,7 +256,7 @@ void edgeFound()
 {
   //als er een afgrond is gevonden
   stopRobot();
-  delay(100)
+  delay(100);
   goBack();
   delay(500);
   goRight();
@@ -293,65 +280,118 @@ void HTTP_handleRoot(void) {
 
 void commandCheck() {
   server.on("/Stoppen", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     stopRobot();
   });
 
   server.on("/Vooruit", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goAhead();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Links", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goLeft();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Rechts", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goRight();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Achteruit", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goBack();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Linksvoor", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goAheadLeft();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Rechtsvoor", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goAheadRight();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Linksachter", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goBackLeft();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Rechtsachter", []() {
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", webPage());
     goBackRight();
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
-
-  server.on("/ToggleManual", []() {
-    server.send(200, "text/html", webPage);
-    manual = !manual;
+  
+  server.on("/setSpeed", []() {
+    if (server.hasArg("speedInput"))
+    {
+      if(server.arg("speedInput") != "")
+      {
+        speedCar = server.arg("speedInput").toInt();
+      }
+    }
+    server.send(200, "text/html", webPage());
   });
+  server.on("/setSpeedCo", []() {
+    if (server.hasArg("speedCoInput"))
+    {
+      if(server.arg("speedCoInput") != "")
+      {
+        speed_Coeff = server.arg("speedCoInput").toInt();
+      }
+    }
+    server.send(200, "text/html", webPage());
+  });
+  
+  server.on("/ToggleManual", []() {
+    manual = !manual;
+    server.send(200, "text/html", webPage());
+  });
+}
+
+String webPage()
+{
+  String webPage;
+  webPage += "<b>Status: </b>";
+  webPage += manual ? "Manual<br>" : "Automatic<br>";
+  webPage += "<form action='setSpeed'>";
+  webPage += "<br><b>Speed: </b>";
+  webPage += speedCar;
+  webPage += "&emsp;<input type='text' name='speedInput'><input type='submit' value='Set Speed'>";
+  webPage += "</form>";
+  webPage += "<form action='setSpeedCo'>";
+  webPage += "<br><b>Speed Coefficient: </b>";
+  webPage += speed_Coeff;
+  webPage += "&emsp;<input type='text' name='speedCoInput'><input type='submit' value='Set Speed Coefficient'>";
+  webPage += "</form>";
+  webPage += "<br><a href=\"Linksvoor\"><button class='button'>Linksvoor</button></a>&emsp;";
+  webPage += "<a href=\"Vooruit\"><button class='button'>Vooruit</button></a>&emsp;";
+  webPage += "<a href=\"Rechtsvoor\"><button class='button'>Rechtsvoor</button></a><br>";
+  webPage += "<a href=\"Links\"><button class='button'>Links</button></a>&emsp;";
+  webPage += "<a href=\"Stoppen\"><button class='button'>Stoppen</button></a>&emsp;";
+  webPage += "<a href=\"Rechts\"><button class='button'>Rechts</button></a><br>";
+  webPage += "<a href=\"Linksachter\"><button class='button'>Linksachter</button></a>&emsp;";
+  webPage += "<a href=\"Achteruit\"><button class='button'>Achteruit</button></a>&emsp;";
+  webPage += "<a href=\"Rechtsachter\"><button class='button'>Rechtsachter</button></a>";
+  webPage += "<br><br><a href=\"ToggleManual\"><button class='button'>Manual Toggle</button></a>";
+  webPage += "<style type='text/css'>";
+  webPage += ".button {width: 100px; height: 100px; border-radius: 20%}";
+  webPage += "</style>";
+  
+  return webPage;
 }
