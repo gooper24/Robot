@@ -223,11 +223,16 @@ void loop() {
 char requestSensor() {
   char response;
   Wire.requestFrom(8, 1);
+  response = Wire.read();
+  return response;
+
+  /*
   while (Wire.available())
   {
     response = Wire.read();
   }
   return response;
+  */
 }
 
 void hardLineFound()
