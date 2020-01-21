@@ -77,7 +77,7 @@ void requestEvent()
 char state()
 {
   if (cm >= 15) return '1';
-  if (cm <= 3) return '2';
+  if (cm2 <= 5) return '2';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';
