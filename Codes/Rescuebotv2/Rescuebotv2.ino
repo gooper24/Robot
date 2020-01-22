@@ -20,13 +20,13 @@
 MDNSResponder mdns;
 
 ESP8266WebServer server(80);
-//const char* ssid     = "";      //wifi name
-//const char* password = "E6CA72ADC93A";  //wifi password
-const char* ssid     = "Tesla IoT";      //wifi name
-const char* password = "fsL6HgjN";  //wifi password
+const char* ssid     = "";      //wifi name
+const char* password = "E6CA72ADC93A";  //wifi password
+//const char* ssid     = "Tesla IoT";      //wifi name
+//const char* password = "fsL6HgjN";  //wifi password
 
 String command;             //String to store app command state.
-int speedCar = 400;         // 400 - 1023.
+int speedCar = 800;         // 400 - 1023.
 int speed_Coeff = 3;
 
 bool manual = true;
@@ -63,9 +63,9 @@ void setup() {
     Serial.println("MDNS responder gestart");
 
   server.on("/", []() {
-    if (server.arg("speedInput") != "") 
+    if (server.arg("speedInput") != "")
     {
-      speedCar=server.arg("speedInput").toInt();
+      speedCar = server.arg("speedInput").toInt();
     }
     server.send(200, "text/html", webPage());
   });
@@ -196,6 +196,8 @@ void loop() {
         objectFoundRight();
       case '3';
         objectFoundLeft();
+      case '4';
+        objectFoundLeftRight();
       case 'L':
         leftLineFound();
         break;
@@ -218,30 +220,53 @@ char requestSensor() {
   return response;
 
   /*
-  while (Wire.available())
-  {
+    while (Wire.available())
+    {
     response = Wire.read();
-  }
-  return response;
+    }
+    return response;
   */
 }
 
 void hardLineFound()
 {
   //Wat te doen als links en rechts een lijn detecteren;
+  Serial.println("Hardline found");
   stopRobot();
+  delay(300);
+  goLeft();
+  delay(1000);
+
 }
 
 void objectFoundRight()
 {
   //Wat te doen als links en rechts een lijn detecteren;
   Serial.println("Foundobject RIGHT");
+  stopRobot();
+  delay(300);
+  goLeft();
+  delay(1000);
 }
 
 void objectFoundLeft()
 {
   //Wat te doen als links en rechts een lijn detecteren;
   Serial.println("Foundobject LEFT");
+  stopRobot();
+  delay(300);
+  goRight();
+  delay(1000);
+}
+void objectFoundLeftRight()
+{
+  Serial.println("Object left and right detected (huge object or 2 objects) ");
+  stopRobot();
+  delay(100);
+  goBack();
+  delay(500);
+  goRight();
+  delay(2000);
 }
 
 void leftLineFound()
@@ -249,7 +274,7 @@ void leftLineFound()
   //Wat te doen als er links een lijn wordt gedetecteerd
   Serial.println("Linkerlijn");
   goRight();
-  delay(100);
+  delay(200);
 }
 
 void rightLineFound()
@@ -257,12 +282,13 @@ void rightLineFound()
   //Wat te doen als er rechts een lijn wordt gedetecteerd
   Serial.println("Rechterlijn");
   goLeft();
-  delay(100);
+  delay(200);
 }
 
 void edgeFound()
 {
   //als er een afgrond is gevonden
+  Serial.println("edge found");
   stopRobot();
   delay(100);
   goBack();
@@ -273,7 +299,8 @@ void edgeFound()
 
 void nothingFound()
 {
-  //als er geen afgrond is gevonden
+  //als er niks wordt gevonden
+  Serial.println("Niks gevonden goahead");
   goAhead();
 }
 
@@ -344,11 +371,11 @@ void commandCheck() {
     delay(100); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
-  
+
   server.on("/setSpeed", []() {
     if (server.hasArg("speedInput"))
     {
-      if(server.arg("speedInput") != "")
+      if (server.arg("speedInput") != "")
       {
         speedCar = server.arg("speedInput").toInt();
       }
@@ -358,14 +385,14 @@ void commandCheck() {
   server.on("/setSpeedCo", []() {
     if (server.hasArg("speedCoInput"))
     {
-      if(server.arg("speedCoInput") != "")
+      if (server.arg("speedCoInput") != "")
       {
         speed_Coeff = server.arg("speedCoInput").toInt();
       }
     }
     server.send(200, "text/html", webPage());
   });
-  
+
   server.on("/ToggleManual", []() {
     manual = !manual;
     server.send(200, "text/html", webPage());
@@ -400,6 +427,6 @@ String webPage()
   webPage += "<style type='text/css'>";
   webPage += ".button {width: 100px; height: 100px; border-radius: 20%}";
   webPage += "</style>";
-  
+
   return webPage;
 }

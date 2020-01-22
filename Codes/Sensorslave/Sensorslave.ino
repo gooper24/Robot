@@ -107,6 +107,7 @@ char state()
   if (cm >= 15) return '1';
   if (cmR <= 5) return '2';
   if (cmL <= 5) return '3';
+  if (cmR <= 5 && cmL <= 5) return '4';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';
