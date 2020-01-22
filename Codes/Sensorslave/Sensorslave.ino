@@ -1,7 +1,12 @@
 #include <Wire.h> //Voor I2C
 
+// SONAR RECHTS
 const int pingPin2 = 8;
 const int echoPin2 = 9;
+
+// SONAR LINKS
+const int pingPin3 = 11;
+const int echoPin3 = 10;
 
 const int pingPin = 7;
 const int echoPin = 6;
@@ -11,7 +16,8 @@ const int hallPin = 4; //hall sensor
 int led = 13; // standaard LED op Arduino
 int hallSensorValue;
 long cm;
-long cm2;
+long cmR; // SONAR RIGHT
+long cmL; // SONAR LEFT
 bool leftLine;
 bool rightLine;
 
@@ -30,6 +36,9 @@ void setup() {
 void loop() {
   detectEdge();
   detectLines();
+  detectObjectRight();
+  detectObjectLeft();
+
   Serial.println(state());
   detectPerson();
 }
@@ -46,7 +55,7 @@ void detectEdge()
   cm = microsecondsToCentimeters(duration);
 }
 
-void detectObject()
+void detectObjectRight()
 {
   long duration;
   digitalWrite(pingPin2, LOW);
@@ -55,7 +64,19 @@ void detectObject()
   delayMicroseconds(10);
   digitalWrite(pingPin2, LOW);
   duration = pulseIn(echoPin2, HIGH);
-  cm2 = microsecondsToCentimeters(duration);
+  cmR = microsecondsToCentimeters(duration);
+}
+
+void detectObjectLeft()
+{
+  long duration;
+  digitalWrite(pingPin3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pingPin3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pingPin3, LOW);
+  duration = pulseIn(echoPin2, HIGH);
+  cmL = microsecondsToCentimeters(duration);
 }
 
 void detectLines()
@@ -77,15 +98,16 @@ void requestEvent()
 char state()
 {
   if (cm >= 15) return '1';
-  if (cm2 <= 5) return '2';
+  if (cmR <= 5) return '2';
+  if (cmL <= 5) return '3';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';
   return '0';
 }
 
-void detectPerson(){
-  hallSensorValue = digitalRead(hallPin) ; 
+void detectPerson() {
+  hallSensorValue = digitalRead(hallPin) ;
   if (hallSensorValue == HIGH) // When magnetic field is present, Arduino LED is on
   {
     digitalWrite (led, HIGH);
