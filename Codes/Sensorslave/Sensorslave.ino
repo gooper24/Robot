@@ -25,6 +25,10 @@ void setup() {
   Serial.begin(74880);
   pinMode(pingPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(pingPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+  pinMode(pingPin3, OUTPUT);
+  pinMode(echoPin3, INPUT);
   pinMode(IRLeft, INPUT_PULLUP);
   pinMode(IRRight, INPUT_PULLUP);
   pinMode(hallPin, INPUT);
@@ -40,6 +44,9 @@ void loop() {
   detectObjectLeft();
 
   Serial.println(state());
+  Serial.println(cmL);
+  Serial.println(cmR);
+  Serial.println(cm);
   detectPerson();
 }
 
@@ -75,7 +82,7 @@ void detectObjectLeft()
   digitalWrite(pingPin3, HIGH);
   delayMicroseconds(10);
   digitalWrite(pingPin3, LOW);
-  duration = pulseIn(echoPin2, HIGH);
+  duration = pulseIn(echoPin3, HIGH);
   cmL = microsecondsToCentimeters(duration);
 }
 
