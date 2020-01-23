@@ -20,10 +20,10 @@
 MDNSResponder mdns;
 
 ESP8266WebServer server(80);
-const char* ssid     = "";      //wifi name
-const char* password = "E6CA72ADC93A";  //wifi password
-//const char* ssid     = "Tesla IoT";      //wifi name
-//const char* password = "fsL6HgjN";  //wifi password
+//const char* ssid     = " ";      //wifi name
+//const char* password = "E6CA72ADC93A";  //wifi password
+const char* ssid     = "Tesla IoT";      //wifi name
+const char* password = "fsL6HgjN";  //wifi password
 
 String command;             //String to store app command state.
 int speedCar = 800;         // 400 - 1023.
@@ -194,9 +194,9 @@ void loop() {
         break;
       case '2':
         objectFoundRight();
-      case '3';
+      case '3':
         objectFoundLeft();
-      case '4';
+      case '4':
         objectFoundLeftRight();
       case 'L':
         leftLineFound();
