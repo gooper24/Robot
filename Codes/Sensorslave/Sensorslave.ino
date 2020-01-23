@@ -1,5 +1,4 @@
 #include <Wire.h> //Voor I2C
-
 // SONAR RECHTS
 const int pingPin2 = 8;
 const int echoPin2 = 9;
@@ -99,15 +98,14 @@ long microsecondsToCentimeters(long microseconds) {
 void requestEvent()
 {
   Wire.write(state());
-  Serial.println(state());
 }
 
 char state()
 {
   if (cm >= 15) return '1';
-  if (cmR <= 5) return '2';
-  if (cmL <= 5) return '3';
-  if (cmR <= 5 && cmL <= 5) return '4';
+  if (cmR <= 15 && cmL <= 15) return '4';
+  if (cmR <= 15) return '2';
+  if (cmL <= 15) return '3';
   if (leftLine && rightLine) return 'O';
   if (leftLine) return 'L';
   if (rightLine) return 'R';

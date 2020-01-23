@@ -22,11 +22,13 @@ MDNSResponder mdns;
 ESP8266WebServer server(80);
 //const char* ssid     = " ";      //wifi name
 //const char* password = "E6CA72ADC93A";  //wifi password
-const char* ssid     = "Tesla IoT";      //wifi name
-const char* password = "fsL6HgjN";  //wifi password
+//const char* ssid     = "Tesla IoT";      //wifi name
+//const char* password = "fsL6HgjN";  //wifi password
+const char* ssid = "HUAWEI P20 lite";
+const char* password = "paggaboy69";
 
 String command;             //String to store app command state.
-int speedCar = 800;         // 400 - 1023.
+int speedCar = 400;         // 400 - 1023.
 int speed_Coeff = 3;
 
 bool manual = true;
@@ -194,10 +196,13 @@ void loop() {
         break;
       case '2':
         objectFoundRight();
+        break;
       case '3':
         objectFoundLeft();
+        break;
       case '4':
         objectFoundLeftRight();
+        break;
       case 'L':
         leftLineFound();
         break;
@@ -206,6 +211,7 @@ void loop() {
         break;
       case 'O':
         hardLineFound();
+        break;
       default:
         nothingFound();
         break;
@@ -218,14 +224,6 @@ char requestSensor() {
   Wire.requestFrom(8, 1);
   response = Wire.read();
   return response;
-
-  /*
-    while (Wire.available())
-    {
-    response = Wire.read();
-    }
-    return response;
-  */
 }
 
 void hardLineFound()
@@ -274,7 +272,7 @@ void leftLineFound()
   //Wat te doen als er links een lijn wordt gedetecteerd
   Serial.println("Linkerlijn");
   goRight();
-  delay(200);
+  delay(1000);
 }
 
 void rightLineFound()
@@ -282,14 +280,14 @@ void rightLineFound()
   //Wat te doen als er rechts een lijn wordt gedetecteerd
   Serial.println("Rechterlijn");
   goLeft();
-  delay(200);
+  delay(1000);
 }
 
 void edgeFound()
 {
   //als er een afgrond is gevonden
-  Serial.println("edge found");
   stopRobot();
+  Serial.println("edge found");
   delay(100);
   goBack();
   delay(500);
