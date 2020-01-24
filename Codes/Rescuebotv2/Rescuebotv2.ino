@@ -400,6 +400,9 @@ void commandCheck() {
 String webPage()
 {
   String webPage;
+  webPage += "<style type='text/css'>";
+  webPage += ".button {width: 100px; height: 100px; border-radius: 20%}";
+  webPage += "</style>";
   webPage += "<b>Status: </b>";
   webPage += manual ? "Manual<br>" : "Automatic<br>";
   webPage += "<form action='setSpeed'>";
@@ -422,9 +425,6 @@ String webPage()
   webPage += "<a href=\"Achteruit\"><button class='button'>Achteruit</button></a>&emsp;";
   webPage += "<a href=\"Rechtsachter\"><button class='button'>Rechtsachter</button></a>";
   webPage += "<br><br><a href=\"ToggleManual\"><button class='button'>Manual Toggle</button></a>";
-  webPage += "<style type='text/css'>";
-  webPage += ".button {width: 100px; height: 100px; border-radius: 20%}";
-  webPage += "</style>";
 
   return webPage;
 }
