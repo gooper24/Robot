@@ -22,10 +22,10 @@ MDNSResponder mdns;
 ESP8266WebServer server(80);
 //const char* ssid     = " ";      //wifi name
 //const char* password = "E6CA72ADC93A";  //wifi password
-//const char* ssid     = "Tesla IoT";      //wifi name
-//const char* password = "fsL6HgjN";  //wifi password
-const char* ssid = "HUAWEI P20 lite";
-const char* password = "paggaboy69";
+const char* ssid     = "Tesla IoT";      //wifi name
+const char* password = "fsL6HgjN";  //wifi password
+//const char* ssid = "HUAWEI P20 lite";
+//const char* password = "paggaboy69";
 
 String command;             //String to store app command state.
 int speedCar = 400;         // 400 - 1023.
@@ -232,6 +232,8 @@ void hardLineFound()
   Serial.println("Hardline found");
   stopRobot();
   delay(300);
+  goBack();
+  delay(300);
   goLeft();
   delay(1000);
 
@@ -243,6 +245,8 @@ void objectFoundRight()
   Serial.println("Foundobject RIGHT");
   stopRobot();
   delay(300);
+  goBack();
+  delay(300);
   goLeft();
   delay(1000);
 }
@@ -252,6 +256,8 @@ void objectFoundLeft()
   //Wat te doen als links en rechts een lijn detecteren;
   Serial.println("Foundobject LEFT");
   stopRobot();
+  delay(300);
+  goBack();
   delay(300);
   goRight();
   delay(1000);
@@ -271,16 +277,22 @@ void leftLineFound()
 {
   //Wat te doen als er links een lijn wordt gedetecteerd
   Serial.println("Linkerlijn");
+  delay(100);
+  goBack();
+  delay(200);
   goRight();
-  delay(1000);
+  delay(750);
 }
 
 void rightLineFound()
 {
   //Wat te doen als er rechts een lijn wordt gedetecteerd
   Serial.println("Rechterlijn");
+  delay(100);
+  goBack();
+  delay(200);
   goLeft();
-  delay(1000);
+  delay(750);
 }
 
 void edgeFound()
@@ -320,53 +332,53 @@ void commandCheck() {
   server.on("/Vooruit", []() {
     server.send(200, "text/html", webPage());
     goAhead();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Links", []() {
     server.send(200, "text/html", webPage());
     goLeft();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Rechts", []() {
     server.send(200, "text/html", webPage());
     goRight();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
   server.on("/Achteruit", []() {
     server.send(200, "text/html", webPage());
     goBack();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Linksvoor", []() {
     server.send(200, "text/html", webPage());
     goAheadLeft();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Rechtsvoor", []() {
     server.send(200, "text/html", webPage());
     goAheadRight();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Linksachter", []() {
     server.send(200, "text/html", webPage());
     goBackLeft();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
   server.on("/Rechtsachter", []() {
     server.send(200, "text/html", webPage());
     goBackRight();
-    delay(100); //zorgt ervoor dat hij niet constant blijft rijden
+    delay(500); //zorgt ervoor dat hij niet constant blijft rijden
     stopRobot();
   });
 
@@ -393,6 +405,12 @@ void commandCheck() {
 
   server.on("/ToggleManual", []() {
     manual = !manual;
+    server.send(200, "text/html", webPage());
+  });
+
+  server.on("/emergencyStop", []() {
+    manual = true;
+    stopRobot();
     server.send(200, "text/html", webPage());
   });
 }
@@ -425,6 +443,7 @@ String webPage()
   webPage += "<a href=\"Achteruit\"><button class='button'>Achteruit</button></a>&emsp;";
   webPage += "<a href=\"Rechtsachter\"><button class='button'>Rechtsachter</button></a>";
   webPage += "<br><br><a href=\"ToggleManual\"><button class='button'>Manual Toggle</button></a>";
+  webPage += "&emsp;&emsp;&emsp;<a href='emergencyStop'><button class='button'>EMERGENCY SHUTDOWN!</button></a>";
 
   return webPage;
 }

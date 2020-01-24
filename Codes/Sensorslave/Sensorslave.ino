@@ -9,8 +9,8 @@ const int echoPin3 = 10;
 
 const int pingPin = 7;
 const int echoPin = 6;
-const int IRLeft = 3;
-const int IRRight = 2;
+const int IRLeft = 2;
+const int IRRight = 3;
 const int hallPin = 4; //hall sensor
 int led = 13; // standaard LED op Arduino
 int hallSensorValue;
@@ -32,6 +32,7 @@ void setup() {
   pinMode(IRRight, INPUT_PULLUP);
   pinMode(hallPin, INPUT);
   pinMode (led, OUTPUT);
+  digitalWrite(led, LOW);
   Wire.begin(8);
   Wire.onRequest(requestEvent);
 }
@@ -114,7 +115,7 @@ char state()
 
 void detectPerson() {
   hallSensorValue = digitalRead(hallPin) ;
-  if (hallSensorValue == HIGH) // When magnetic field is present, Arduino LED is on
+  if (hallSensorValue == LOW) // When magnetic field is present, Arduino LED is on
   {
     digitalWrite (led, HIGH);
   }
